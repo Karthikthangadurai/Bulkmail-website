@@ -1,85 +1,62 @@
-const express = require ("express")
-const cors = require ("cors")
-const mongoose = require("mongoose")
-
-const app = express()
-
-app.use(cors())
-app.use(express.json())
-app.use(express.urlencoded({extended:true}))
-
-mongoose.connect("mongodb+srv://karthikthangaduraik_db_user:12345@cluster0.b6iojfq.mongodb.net/passkey?retryWrites=true&w=majority&appName=Cluster0").then(function(){
-    console.log("Connected to DB")
-}).catch(function(){
-    console.log("Failed to Connect")
-})
-
-const credential = mongoose.model("credential",{},"bulkmail")
-
-
-
+const express = require("express");
+const cors = require("cors");
+const mongoose = require("mongoose");
 const nodemailer = require("nodemailer");
 
-// Create a test account or replace with real credentials.
+const app = express();
 
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
+// ✅ Use env variable for MongoDB
+const MONGO_URI = process.env.MONGODB_URI || "your-fallback-local-mongo-uri";
 
-app.post("/sendemail",function(req,res){
+mongoose
+  .connect(MONGO_URI)
+  .then(() => console.log("✅ Connected to DB"))
+  .catch((err) => console.error("❌ MongoDB Connection Error:", err));
 
-    let msg = req.body.msg
-    let emailList = req.body.emailList
+const credential = mongoose.model("credential", {}, "bulkmail");
 
-    credential.find().then(function(data){
-    console.log(data[0].toJSON())
-
-    const transporter = nodemailer.createTransport({
-        service:"gmail",
-  auth: {
-    user: data[0].toJSON().user,
-    pass: data[0].toJSON().pass,
-  },
+// ✅ Root test route
+app.get("/", (req, res) => {
+  res.send("🚀 Bulkmail Backend is running...");
 });
 
-    new Promise(async function(resolve,reject){
-    try
-    {
-        for(let i=0;i<emailList.length;i++)
-    {
-        
-      await  transporter.sendMail(
-    { 
-        from:"karthikthangaduraik@gmail.com",
-        to:emailList[i],
-        subject:"A message from Bulk Mail App",
-        text:msg
-    },
-)
+app.post("/sendemail", async (req, res) => {
+  try {
+    let { msg, emailList } = req.body;
 
-console.log("Email sent to:"+emailList[i])
-}
+    const data = await credential.find();
+    if (!data || data.length === 0) {
+      return res.status(500).json({ error: "No credentials found" });
+    }
 
-resolve("Success")
-}
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: data[0].user,
+        pass: data[0].pass,
+      },
+    });
 
-catch(error)
-{
-    reject("Failed")
-}
+    for (let i = 0; i < emailList.length; i++) {
+      await transporter.sendMail({
+        from: data[0].user,
+        to: emailList[i],
+        subject: "A message from Bulk Mail App",
+        text: msg,
+      });
+      console.log("📧 Email sent to:", emailList[i]);
+    }
 
-}).then(function(){
-    res.send(true)
-}).catch(function(){
-    res.send(false)
-})
+    res.json({ success: true });
+  } catch (err) {
+    console.error("❌ Email sending error:", err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
 
-
-}).catch(function(error){
-    console.log(error)
-})
-
-})
-
-const PORT = process.env.PORT || 3000
-app.listen(PORT,function(){
-    console.log("Server Started.....")
-})
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`🚀 Server started on port ${PORT}`));

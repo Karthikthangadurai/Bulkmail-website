@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // ✅ Use env variable for MongoDB
-const MONGO_URI = process.env.MONGODB_URI || "your-fallback-local-mongo-uri";
+const MONGO_URI = process.env.MONGODB_URI || "mongodb+srv://karthikthangaduraik_db_user:12345@cluster0.b6iojfq.mongodb.net/passkey?retryWrites=true&w=majority&appName=Cluster0";
 
 mongoose
   .connect(MONGO_URI)

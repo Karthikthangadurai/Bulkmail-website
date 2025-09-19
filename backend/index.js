@@ -79,6 +79,7 @@ catch(error)
 
 })
 
-app.listen("https://bulkmail-website-backend.onrender.com",function(){
+const PORT = process.env.PORT || 3000
+app.listen("PORT",function(){
     console.log("Server Started.....")
 })

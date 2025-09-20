@@ -36,7 +36,7 @@ const Body = () => {
   function send()
   {
     setstatus(true)
-    axios.post("http://localhost:3000/sendemail",{msg:msg,emailList:emailList})
+    axios.post("https://bulkmail-website-backend.onrender.com/sendemail",{msg:msg,emailList:emailList})
     .then(function(data)
 {
     if(data.data === true)

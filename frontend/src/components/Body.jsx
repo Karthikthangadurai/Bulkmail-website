@@ -53,13 +53,13 @@ const Body = () => {
 
 
   return (
-        <div className="bg-blue-300 sm:px-24 md:46 lg:px-72 py-16">
+        <div className="bg-blue-300 px-6 sm:px-24 md:46 lg:px-72 py-16">
           <div className="bg-green-500 flex flex-col items-center text-black border-4 border-blue-800 shadow-2xl rounded-xl">
-          <h1 className="text-gray-100 font-semibold text-lg mt-2 mb-2">Email Content📝</h1>
-      <textarea onChange={handlemsg} value={msg} className="w-[55%] h-32 py-2 outline-none px-2 border-2 border-yellow-500 rounded-md" placeholder="Write your email content here....."></textarea>
+          <h1 className="text-gray-100 font-semibold text-base md:text-lg mt-2 mb-2">Email Content📝</h1>
+      <textarea onChange={handlemsg} value={msg} className="w-72 md:w-[55%] h-28 md:h-32 py-2 outline-none px-2 border-2 border-yellow-500 rounded-md" placeholder="Write your email content here....."></textarea>
     
       <div>
-        <input type="file" onChange={handlefile} className=" border-2 border-dashed p-4 mt-5 mb-5" />
+        <input type="file" onChange={handlefile} className=" border-2 border-dashed py-3 px-1 md:p-4 mt-5 mb-5 text-sm md:text-base" />
       </div>
 
       <p className="font-semibold text-gray-100">Total Emails in the File: {emailList.length}</p>

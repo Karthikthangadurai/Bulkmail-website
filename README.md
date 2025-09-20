@@ -1,4 +1,4 @@
- Bulkmail Sender Website ✉️
+📈 Bulkmail Sender Website ✉️
 
 I’m excited to share my **Full Stack Bulkmail Sender Application**, built using the **MERN stack** (MongoDB, Express.js, React.js, Node.js). This project allows users to send bulk emails effortlessly by writing content, uploading an Excel file of email IDs, and sending all messages in one click.
 
